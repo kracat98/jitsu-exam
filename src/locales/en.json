@@ -1,0 +1,125 @@
+{
+  "nav": {
+    "shipments": "Shipments",
+    "assignments": "Assignments"
+  },
+  "common": {
+    "loading": "Loading...",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "create": "Create",
+    "add": "Add",
+    "new": "New",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "select": "Select",
+    "location": "Location",
+    "status": "Status",
+    "label": "Label",
+    "client": "Client",
+    "clients": "Clients",
+    "shipment": "Shipment",
+    "shipments": "Shipments",
+    "assignment": "Assignment",
+    "assignments": "Assignments",
+    "count": "Count",
+    "name": "Name",
+    "date": "Date",
+    "id": "ID"
+  },
+  "shipments": {
+    "title": "Shipments",
+    "searchPlaceholder": "Search by label or client name...",
+    "selectToView": "Select a shipment to view details",
+    "details": {
+      "title": "Shipment Details",
+      "clientName": "Client Name",
+      "label": "Label",
+      "status": "Status",
+      "arrivalDate": "Arrival Date",
+      "deliveryByDate": "Delivery By Date",
+      "warehouseId": "Warehouse ID",
+      "assignmentId": "Assignment ID",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "location": "Location",
+      "deleteConfirm": "Are you sure you want to delete this shipment?",
+      "yesDelete": "Yes, Delete",
+      "assignmentRequired": "Please select an assignment for this status",
+      "updateError": "Failed to update shipment",
+      "deleteError": "Failed to delete shipment"
+    },
+    "list": {
+      "title": "Shipments",
+      "addButton": "+ Add Shipment"
+    },
+    "form": {
+      "title": "Create New Shipment",
+      "clientName": "Client Name",
+      "label": "Label",
+      "status": "Status",
+      "arrivalDate": "Arrival Date",
+      "deliveryByDate": "Delivery By Date",
+      "warehouseId": "Warehouse ID",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "createError": "Failed to create shipment"
+    },
+    "status": {
+      "open": "OPEN",
+      "in_transit": "IN_TRANSIT",
+      "delivered": "DELIVERED"
+    }
+  },
+  "assignments": {
+    "title": "Assignments",
+    "searchPlaceholder": "Search by assignment label...",
+    "selectToView": "Select an assignment to view details",
+    "selectShipmentToView": "Select a shipment to view details",
+    "details": {
+      "title": "Assignment Details",
+      "label": "Label",
+      "status": "Status",
+      "clients": "Clients",
+      "shipmentCount": "Shipment Count",
+      "shipments": "Shipments",
+      "noShipments": "No shipments in this assignment",
+      "deleteConfirm": "Are you sure you want to delete this assignment?",
+      "yesDelete": "Yes, Delete",
+      "cannotDelete": "Cannot delete assignment with shipments. Please remove all shipments first.",
+      "deleteError": "Failed to delete assignment"
+    },
+    "list": {
+      "title": "Assignments",
+      "newButton": "+ New Assignment",
+      "shipmentsCount": "{{count}} shipments"
+    },
+    "form": {
+      "title": "Create New Assignment",
+      "label": "Label",
+      "status": "Status",
+      "clients": "Clients (comma-separated)",
+      "labelPlaceholder": "e.g., TX-127",
+      "clientsPlaceholder": "e.g., Samsung, ShipCo",
+      "createError": "Failed to create assignment"
+    },
+    "status": {
+      "open": "OPEN",
+      "in_transit": "IN_TRANSIT",
+      "delivered": "DELIVERED"
+    }
+  },
+  "map": {
+    "noLocation": "No location data available",
+    "shipmentLocation": "Shipment Location"
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Tiếng Việt",
+    "selectLanguage": "Select Language"
+  }
+}

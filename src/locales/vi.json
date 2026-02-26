@@ -1,0 +1,125 @@
+{
+  "nav": {
+    "shipments": "Lô hàng",
+    "assignments": "Phân công"
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "create": "Tạo",
+    "add": "Thêm",
+    "new": "Mới",
+    "none": "Không có",
+    "yes": "Có",
+    "no": "Không",
+    "search": "Tìm kiếm",
+    "select": "Chọn",
+    "location": "Vị trí",
+    "status": "Trạng thái",
+    "label": "Nhãn",
+    "client": "Khách hàng",
+    "clients": "Khách hàng",
+    "shipment": "Lô hàng",
+    "shipments": "Lô hàng",
+    "assignment": "Phân công",
+    "assignments": "Phân công",
+    "count": "Số lượng",
+    "name": "Tên",
+    "date": "Ngày",
+    "id": "Mã"
+  },
+  "shipments": {
+    "title": "Lô hàng",
+    "searchPlaceholder": "Tìm kiếm theo nhãn hoặc tên khách hàng...",
+    "selectToView": "Chọn một lô hàng để xem chi tiết",
+    "details": {
+      "title": "Chi tiết lô hàng",
+      "clientName": "Tên khách hàng",
+      "label": "Nhãn",
+      "status": "Trạng thái",
+      "arrivalDate": "Ngày đến",
+      "deliveryByDate": "Ngày giao hàng",
+      "warehouseId": "Mã kho",
+      "assignmentId": "Mã phân công",
+      "latitude": "Vĩ độ",
+      "longitude": "Kinh độ",
+      "location": "Vị trí",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa lô hàng này?",
+      "yesDelete": "Có, Xóa",
+      "assignmentRequired": "Vui lòng chọn một phân công cho trạng thái này",
+      "updateError": "Không thể cập nhật lô hàng",
+      "deleteError": "Không thể xóa lô hàng"
+    },
+    "list": {
+      "title": "Lô hàng",
+      "addButton": "+ Thêm lô hàng"
+    },
+    "form": {
+      "title": "Tạo lô hàng mới",
+      "clientName": "Tên khách hàng",
+      "label": "Nhãn",
+      "status": "Trạng thái",
+      "arrivalDate": "Ngày đến",
+      "deliveryByDate": "Ngày giao hàng",
+      "warehouseId": "Mã kho",
+      "latitude": "Vĩ độ",
+      "longitude": "Kinh độ",
+      "createError": "Không thể tạo lô hàng"
+    },
+    "status": {
+      "open": "MỞ",
+      "in_transit": "ĐANG VẬN CHUYỂN",
+      "delivered": "ĐÃ GIAO"
+    }
+  },
+  "assignments": {
+    "title": "Phân công",
+    "searchPlaceholder": "Tìm kiếm theo nhãn phân công...",
+    "selectToView": "Chọn một phân công để xem chi tiết",
+    "selectShipmentToView": "Chọn một lô hàng để xem chi tiết",
+    "details": {
+      "title": "Chi tiết phân công",
+      "label": "Nhãn",
+      "status": "Trạng thái",
+      "clients": "Khách hàng",
+      "shipmentCount": "Số lượng lô hàng",
+      "shipments": "Lô hàng",
+      "noShipments": "Không có lô hàng trong phân công này",
+      "deleteConfirm": "Bạn có chắc chắn muốn xóa phân công này?",
+      "yesDelete": "Có, Xóa",
+      "cannotDelete": "Không thể xóa phân công có lô hàng. Vui lòng xóa tất cả lô hàng trước.",
+      "deleteError": "Không thể xóa phân công"
+    },
+    "list": {
+      "title": "Phân công",
+      "newButton": "+ Phân công mới",
+      "shipmentsCount": "{{count}} lô hàng"
+    },
+    "form": {
+      "title": "Tạo phân công mới",
+      "label": "Nhãn",
+      "status": "Trạng thái",
+      "clients": "Khách hàng (phân cách bằng dấu phẩy)",
+      "labelPlaceholder": "ví dụ: TX-127",
+      "clientsPlaceholder": "ví dụ: Samsung, ShipCo",
+      "createError": "Không thể tạo phân công"
+    },
+    "status": {
+      "open": "MỞ",
+      "in_transit": "ĐANG VẬN CHUYỂN",
+      "delivered": "ĐÃ GIAO"
+    }
+  },
+  "map": {
+    "noLocation": "Không có dữ liệu vị trí",
+    "shipmentLocation": "Vị trí lô hàng"
+  },
+  "language": {
+    "english": "English",
+    "vietnamese": "Tiếng Việt",
+    "selectLanguage": "Chọn ngôn ngữ"
+  }
+}

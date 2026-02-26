@@ -1,0 +1,95 @@
+{
+  "statuses": [
+    {
+      "id": "OPEN"
+    },
+    {
+      "id": "IN_TRANSIT"
+    },
+    {
+      "id": "DELIVERED"
+    }
+  ],
+  "shipments": [
+    {
+      "id": "shp_001",
+      "client_name": "SamSung",
+      "label": "LAX-581-250521-1",
+      "status": "IN_TRANSIT",
+      "arrival_date": "2025-05-28T08:22:57.503Z",
+      "delivery_by_date": "2025-05-30T08:22:57.503Z",
+      "eta": "2025-05-30T05:22:57.503Z",
+      "warehouse_id": "581",
+      "assignment_id": "as_123",
+      "lat": 37.50625872839932,
+      "lng": -122.27532417589653
+    },
+    {
+      "id": "shp_002",
+      "client_name": "DHL",
+      "label": "JFK-581-250522-2",
+      "status": "DELIVERED",
+      "arrival_date": "2025-05-29T08:22:57.503Z",
+      "delivery_by_date": "2025-05-31T08:22:57.503Z",
+      "eta": "2025-05-30T19:22:57.503Z",
+      "warehouse_id": "581",
+      "assignment_id": "as_4567",
+      "lat": 37.50625872839932,
+      "lng": -122.27532417589653
+    },
+    {
+      "id": "shp_003",
+      "client_name": "SamSung",
+      "label": "LAX-581-250521-6",
+      "status": "OPEN",
+      "arrival_date": "2025-05-28T08:22:57.503Z",
+      "delivery_by_date": "2025-05-30T08:22:57.503Z",
+      "eta": "2025-05-30T05:22:57.503Z",
+      "warehouse_id": "581",
+      "lat": 37.50625872839932,
+      "lng": -122.27532417589653
+    },
+    {
+      "client_name": "LAX-123-12345-1",
+      "label": "Apple",
+      "status": "IN_TRANSIT",
+      "arrival_date": "2026-02-25T00:00:00.000Z",
+      "delivery_by_date": "2026-02-27T00:00:00.000Z",
+      "warehouse_id": "581",
+      "lat": 38,
+      "lng": -120,
+      "id": "VKYeIl_",
+      "assignment_id": "as_123"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "as_002",
+      "label": "TX-127",
+      "status": "OPEN",
+      "clients": [
+        "Samsung",
+        "ShipCo"
+      ],
+      "shipment_count": 1
+    },
+    {
+      "id": "as_123",
+      "label": "CA-456",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "SamSung"
+      ],
+      "shipment_count": 1
+    },
+    {
+      "id": "as_4567",
+      "label": "NY-789",
+      "status": "DELIVERED",
+      "clients": [
+        "DHL"
+      ],
+      "shipment_count": 1
+    }
+  ]
+}
