@@ -1,38 +1,17 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Layout, Typography, Spin, Empty } from 'antd'
-import { useShipments, useAssignments, useStatuses } from '../hooks'
+import { Layout, Empty } from 'antd'
 import AssignmentList from '../components/AssignmentList/AssignmentList'
 import AssignmentDetails from '../components/AssignmentDetails/AssignmentDetails'
 import ShipmentDetails from '../components/ShipmentDetails/ShipmentDetails'
 import type { Assignment, Shipment } from '../types'
 
 const { Header: PageHeader, Content, Sider } = Layout
-const { Title } = Typography
 
 const AssignmentsPage: React.FC = () => {
   const { t } = useTranslation()
   const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null)
   const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
-
-  const { data: shipments = [], isLoading: shipmentsLoading } = useShipments()
-  const { data: assignments = [], isLoading: assignmentsLoading } = useAssignments()
-  const { data: statuses = [], isLoading: statusesLoading } = useStatuses()
-
-  const filteredAssignments = useMemo(() => {
-    if (!searchTerm.trim()) {
-      return assignments
-    }
-
-    const term = searchTerm.toLowerCase()
-    return assignments.filter((assignment) => assignment.label.toLowerCase().includes(term))
-  }, [searchTerm, assignments])
-
-  const assignmentShipments = useMemo(() => {
-    if (!selectedAssignment) return []
-    return shipments.filter((s) => s.assignment_id === selectedAssignment.id)
-  }, [selectedAssignment, shipments])
 
   const handleAssignmentSelect = (assignment: Assignment) => {
     setSelectedAssignment(assignment)
@@ -55,23 +34,8 @@ const AssignmentsPage: React.FC = () => {
     }
   }
 
-  if (shipmentsLoading || assignmentsLoading || statusesLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Spin size="large" tip={t('common.loading')} />
-      </div>
-    )
-  }
-
   return (
     <Layout style={{ height: '100%' }}>
-      <PageHeader
-        style={{
-          background: '#fff',
-          borderBottom: '1px solid #f0f0f0',
-          padding: '16px 24px',
-        }}
-      />
       <Content style={{ display: 'flex', height: 'calc(100% - 64px)' }}>
         <Sider
           width="30%"
@@ -82,12 +46,9 @@ const AssignmentsPage: React.FC = () => {
           }}
         >
           <AssignmentList
-            assignments={filteredAssignments}
             onSelect={handleAssignmentSelect}
             selectedId={selectedAssignment?.id}
             onUpdate={() => { }}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
           />
         </Sider>
         <Sider
@@ -101,7 +62,6 @@ const AssignmentsPage: React.FC = () => {
           {selectedAssignment ? (
             <AssignmentDetails
               assignment={selectedAssignment}
-              shipments={assignmentShipments}
               onShipmentSelect={handleShipmentSelect}
               selectedShipmentId={selectedShipment?.id}
             />
@@ -120,12 +80,10 @@ const AssignmentsPage: React.FC = () => {
           {selectedShipment ? (
             <ShipmentDetails
               shipment={selectedShipment}
-              statuses={statuses}
-              assignments={assignments}
               onUpdate={handleShipmentUpdate}
               onDelete={handleShipmentDelete}
               showMapWithAllShipments={true}
-              allShipments={assignmentShipments}
+              assignmentId={selectedAssignment?.id}
             />
           ) : (
             <Empty description={t('assignments.selectShipmentToView')} />

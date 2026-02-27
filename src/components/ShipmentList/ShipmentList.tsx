@@ -1,29 +1,40 @@
-import { useState } from 'react'
-import { useCreateShipment } from '../../hooks/useShipments'
+import { useEffect, useState } from 'react'
+import { SHIPMENTS_PER_PAGE, useCreateShipment, useShipments } from '../../hooks/useShipments'
 import { useAssignments } from '../../hooks'
 import ShipmentListUI from './ShipmentListUI'
 import type { Shipment, CreateShipmentData } from '../../types'
 
+export interface PaginationConfig {
+  current: number
+  total: number
+  pageSize: number
+  onChange: (page: number) => void
+}
+
 interface ShipmentListProps {
-  shipments: Shipment[]
   selectedId?: string
   onSelect: (shipment: Shipment) => void
   onCreate: () => void
-  searchTerm: string
-  onSearchChange: (value: string) => void
 }
 
 const ShipmentList: React.FC<ShipmentListProps> = ({
-  shipments,
   selectedId,
   onSelect,
   onCreate,
-  searchTerm,
-  onSearchChange,
 }) => {
   const [showForm, setShowForm] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm])
+
   const createShipmentMutation = useCreateShipment()
   const { data: assignments = [] } = useAssignments()
+  const { data: paginated, isLoading: shipmentsLoading } = useShipments(currentPage ?? 1, searchTerm ?? '')
+  const shipments = paginated?.data ?? []
+  const totalShipments = paginated?.total ?? 0
 
   const handleCreate = async (data: CreateShipmentData) => {
     try {
@@ -47,7 +58,14 @@ const ShipmentList: React.FC<ShipmentListProps> = ({
       onCreate={handleCreate}
       assignments={assignments}
       searchTerm={searchTerm}
-      onSearchChange={onSearchChange}
+      onSearchChange={setSearchTerm}
+      pagination={{
+        current: currentPage,
+        total: totalShipments,
+        pageSize: SHIPMENTS_PER_PAGE,
+        onChange: setCurrentPage,
+      }}
+      isLoading={shipmentsLoading}
     />
   )
 }

@@ -1,41 +1,55 @@
-import { useState, memo } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Layout, Typography, Button, Space, Descriptions, Card, Empty, Modal, Divider } from 'antd'
+import {
+  Layout,
+  Typography,
+  Button,
+  Space,
+  Descriptions,
+  Card,
+  Empty,
+  Modal,
+  Divider,
+  Pagination,
+  Spin,
+  Tooltip,
+} from 'antd'
 import { useDeleteAssignment } from '../../hooks/useAssignments'
+import { useShipmentsByAssignment, SHIPMENTS_PER_PAGE } from '../../hooks'
 import { StatusBadge } from '../shared/StatusBadge'
 import type { Assignment, Shipment } from '../../types'
+import { formatDate } from '../../utils'
 
 const { Header, Content } = Layout
 const { Title, Text } = Typography
 
 interface AssignmentDetailsProps {
   assignment: Assignment
-  shipments: Shipment[]
   onShipmentSelect: (shipment: Shipment) => void
   selectedShipmentId?: string
 }
 
-const formatDate = (dateString: string, locale: string): string => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
 const AssignmentDetails: React.FC<AssignmentDetailsProps> = memo(({
   assignment,
-  shipments,
   onShipmentSelect,
   selectedShipmentId,
 }) => {
   const { t, i18n } = useTranslation()
+  const [currentPage, setCurrentPage] = useState(1)
   const deleteMutation = useDeleteAssignment()
+  const { data: paginated, isLoading: shipmentsLoading } = useShipmentsByAssignment(
+    assignment.id,
+    currentPage,
+  )
+  const shipments = paginated?.data ?? []
+  const totalShipments = paginated?.total ?? 0
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [assignment.id])
 
   const handleDelete = async () => {
-    if (shipments.length > 0) {
+    if (totalShipments > 0) {
       Modal.warning({
         title: t('assignments.details.cannotDelete'),
       })
@@ -76,11 +90,20 @@ const AssignmentDetails: React.FC<AssignmentDetailsProps> = memo(({
         <Title level={3} style={{ margin: 0 }}>
           {t('assignments.details.title')}
         </Title>
-        {shipments.length === 0 && (
-          <Button danger onClick={handleDelete}>
-            {t('common.delete')}
-          </Button>
-        )}
+        <Tooltip
+          title="You can only delete this assignment when it has no shipments"
+          mouseEnterDelay={0.3}
+        >
+          <span style={{ display: 'inline-block' }}>
+            <Button
+              danger
+              onClick={handleDelete}
+              disabled={totalShipments > 0}
+            >
+              {t('common.delete')}
+            </Button>
+          </span>
+        </Tooltip>
       </Header>
 
       <Content style={{ overflow: 'auto', padding: '24px' }}>
@@ -99,44 +122,61 @@ const AssignmentDetails: React.FC<AssignmentDetailsProps> = memo(({
               : t('common.none')}
           </Descriptions.Item>
           <Descriptions.Item label={t('assignments.details.shipmentCount')}>
-            {shipments.length}
+            {totalShipments}
           </Descriptions.Item>
         </Descriptions>
 
         <Card
-          title={`${t('assignments.details.shipments')} (${shipments.length})`}
+          title={`${t('assignments.details.shipments')} (${totalShipments})`}
           style={{ marginTop: '24px' }}
         >
-          {shipments.length === 0 ? (
+          {shipmentsLoading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+              <Spin tip={t('common.loading')} />
+            </div>
+          ) : shipments.length === 0 ? (
             <Empty description={t('assignments.details.noShipments')} />
           ) : (
-            <Space direction="vertical" size="small" style={{ width: '100%' }}>
-              {shipments.map((shipment) => (
-                <Card
-                  key={shipment.id}
-                  size="small"
-                  hoverable
-                  onClick={() => onShipmentSelect(shipment)}
-                  style={{
-                    cursor: 'pointer',
-                    borderColor: selectedShipmentId === shipment.id ? '#3498db' : undefined,
-                    backgroundColor: selectedShipmentId === shipment.id ? '#e3f2fd' : undefined,
-                  }}
-                >
-                  <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                    <Text strong>{shipment.label}</Text>
-                    <StatusBadge status={shipment.status}>
-                      {t(`shipments.status.${shipment.status.toLowerCase()}`)}
-                    </StatusBadge>
-                  </Space>
-                  <Divider style={{ margin: '8px 0' }} />
-                  <Space split={<Divider type="vertical" />}>
-                    <Text>{shipment.client_name}</Text>
-                    <Text type="secondary">{formatDate(shipment.arrival_date, i18n.language)}</Text>
-                  </Space>
-                </Card>
-              ))}
-            </Space>
+            <>
+              <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                {shipments.map((shipment) => (
+                  <Card
+                    key={shipment.id}
+                    size="small"
+                    hoverable
+                    onClick={() => onShipmentSelect(shipment)}
+                    style={{
+                      cursor: 'pointer',
+                      borderColor: selectedShipmentId === shipment.id ? '#3498db' : undefined,
+                      backgroundColor: selectedShipmentId === shipment.id ? '#e3f2fd' : undefined,
+                    }}
+                  >
+                    <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+                      <Text strong>{shipment.label}</Text>
+                      <StatusBadge status={shipment.status}>
+                        {t(`shipments.status.${shipment.status.toLowerCase()}`)}
+                      </StatusBadge>
+                    </Space>
+                    <Divider style={{ margin: '8px 0' }} />
+                    <Space split={<Divider type="vertical" />}>
+                      <Text>{shipment.client_name}</Text>
+                      <Text type="secondary">{formatDate(shipment.arrival_date, i18n.language)}</Text>
+                    </Space>
+                  </Card>
+                ))}
+              </Space>
+              {totalShipments > SHIPMENTS_PER_PAGE && (
+                <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+                  <Pagination
+                    current={currentPage}
+                    total={totalShipments}
+                    pageSize={SHIPMENTS_PER_PAGE}
+                    onChange={setCurrentPage}
+                    showSizeChanger={false}
+                  />
+                </div>
+              )}
+            </>
           )}
         </Card>
       </Content>

@@ -1,9 +1,11 @@
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Layout, Typography, Button, Card, Space, Divider, Input } from 'antd'
+import { Layout, Typography, Button, Card, Space, Divider, Input, Pagination, Spin } from 'antd'
 import { StatusBadge } from '../shared/StatusBadge'
 import type { Shipment, Assignment } from '../../types'
 import ShipmentForm from '../ShipmentForm/ShipmentForm'
+import type { PaginationConfig } from './ShipmentList'
+import { formatDate } from '../../utils'
 
 const { Header, Content } = Layout
 const { Title, Text } = Typography
@@ -21,16 +23,8 @@ interface ShipmentListUIProps {
   assignments?: Assignment[]
   searchTerm: string
   onSearchChange: (value: string) => void
-}
-
-const formatDate = (dateString: string, locale: string): string => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+  pagination?: PaginationConfig
+  isLoading?: boolean
 }
 
 const ShipmentListUI: React.FC<ShipmentListUIProps> = memo(({
@@ -44,6 +38,8 @@ const ShipmentListUI: React.FC<ShipmentListUIProps> = memo(({
   assignments = [],
   searchTerm,
   onSearchChange,
+  pagination,
+  isLoading = false,
 }) => {
   const { t, i18n } = useTranslation()
   const groupedShipments = shipments.reduce((acc, shipment) => {
@@ -87,42 +83,61 @@ const ShipmentListUI: React.FC<ShipmentListUIProps> = memo(({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
           allowClear
         />
-        {STATUS_ORDER.map((status) => {
-          const groupShipments = groupedShipments[status] || []
-          if (groupShipments.length === 0) return null
+        {isLoading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+            <Spin tip={t('common.loading')} />
+          </div>
+        ) : (
+          <>
+            {STATUS_ORDER.map((status) => {
+              const groupShipments = groupedShipments[status] || []
+              if (groupShipments.length === 0) return null
 
-          return (
-            <div key={status} style={{ marginBottom: '32px' }}>
-              <Space style={{ marginBottom: '12px' }}>
-                <StatusBadge status={status}>{t(`shipments.status.${status.toLowerCase()}`)}</StatusBadge>
-                <Text type="secondary">({groupShipments.length})</Text>
-              </Space>
-              <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                {groupShipments.map((shipment) => (
-                  <Card
-                    key={shipment.id}
-                    size="small"
-                    hoverable
-                    onClick={() => onSelect(shipment)}
-                    style={{
-                      cursor: 'pointer',
-                      borderColor: selectedId === shipment.id ? '#3498db' : undefined,
-                      backgroundColor: selectedId === shipment.id ? '#e3f2fd' : undefined,
-                    }}
-                  >
-                    <div style={{ marginBottom: '8px' }}>
-                      <Text strong>{shipment.label}</Text>
-                    </div>
-                    <Space split={<Divider type="vertical" />}>
-                      <Text>{shipment.client_name}</Text>
-                      <Text type="secondary">{formatDate(shipment.arrival_date, i18n.language)}</Text>
-                    </Space>
-                  </Card>
-                ))}
-              </Space>
-            </div>
-          )
-        })}
+              return (
+                <div key={status} style={{ marginBottom: '32px' }}>
+                  <Space style={{ marginBottom: '12px' }}>
+                    <StatusBadge status={status}>{t(`shipments.status.${status.toLowerCase()}`)}</StatusBadge>
+                    <Text type="secondary">({groupShipments.length})</Text>
+                  </Space>
+                  <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                    {groupShipments.map((shipment) => (
+                      <Card
+                        key={shipment.id}
+                        size="small"
+                        hoverable
+                        onClick={() => onSelect(shipment)}
+                        style={{
+                          cursor: 'pointer',
+                          borderColor: selectedId === shipment.id ? '#3498db' : undefined,
+                          backgroundColor: selectedId === shipment.id ? '#e3f2fd' : undefined,
+                        }}
+                      >
+                        <div style={{ marginBottom: '8px' }}>
+                          <Text strong>{shipment.label}</Text>
+                        </div>
+                        <Space split={<Divider type="vertical" />}>
+                          <Text>{shipment.client_name}</Text>
+                          <Text type="secondary">{formatDate(shipment.arrival_date, i18n.language)}</Text>
+                        </Space>
+                      </Card>
+                    ))}
+                  </Space>
+                </div>
+              )
+            })}
+          </>
+        )}
+        {pagination && (
+          <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+            <Pagination
+              current={pagination.current}
+              total={pagination.total}
+              pageSize={pagination.pageSize}
+              onChange={pagination.onChange}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
       </Content>
     </Layout>
   )

@@ -1,10 +1,16 @@
 import { useState, useEffect, memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Layout, Typography, Button, Space, Descriptions, Modal, Input, Select, Form } from 'antd'
-import { useUpdateShipment, useDeleteShipment } from '../../hooks/useShipments'
+import {
+  useUpdateShipment,
+  useDeleteShipment,
+  useShipmentsByAssignmentAll,
+} from '../../hooks/useShipments'
+import { useStatuses, useAssignments } from '../../hooks'
 import { StatusBadge } from '../shared/StatusBadge'
 import ShipmentMap from '../ShipmentMap/ShipmentMap'
-import type { Shipment, Assignment, Status, ShipmentFormData } from '../../types'
+import type { Shipment, ShipmentFormData } from '../../types'
+import { formatDateTime } from '../../utils'
 
 const { Header, Content } = Layout
 const { Title } = Typography
@@ -12,36 +18,27 @@ const { Option } = Select
 
 interface ShipmentDetailsProps {
   shipment: Shipment
-  statuses: Status[]
-  assignments: Assignment[]
   onUpdate: (shipment: Shipment) => void
   onDelete: (id: string) => void
   showMapWithAllShipments?: boolean
-  allShipments?: Shipment[] | null
-}
-
-const formatDate = (dateString: string, locale: string): string => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  /** When on assignment page, pass assignment id to load all assignment shipments for the map */
+  assignmentId?: string | null
 }
 
 const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
   shipment,
-  statuses,
-  assignments,
   onUpdate,
   onDelete,
   showMapWithAllShipments = false,
-  allShipments = null,
+  assignmentId = null,
 }) => {
   const { t, i18n } = useTranslation()
+  const { data: statuses = [] } = useStatuses()
+  const { data: assignments = [] } = useAssignments()
+  const { data: assignmentShipments = [] } = useShipmentsByAssignmentAll(
+    showMapWithAllShipments && assignmentId ? assignmentId : undefined,
+  )
+  const allShipments = showMapWithAllShipments && assignmentId ? assignmentShipments : null
   const [form] = Form.useForm()
   const [formData, setFormData] = useState<ShipmentFormData>({
     status: shipment.status,
@@ -53,7 +50,6 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
     lng: shipment.lng?.toString() || '',
   })
   const [isEditing, setIsEditing] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const updateMutation = useUpdateShipment()
   const deleteMutation = useDeleteShipment()
 
@@ -126,7 +122,6 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
     try {
       await deleteMutation.mutateAsync(shipment.id)
       onDelete(shipment.id)
-      setShowDeleteConfirm(false)
     } catch (error) {
       console.error('Error deleting shipment:', error)
       Modal.error({
@@ -189,6 +184,20 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
       </Header>
 
       <Content style={{ overflow: 'auto', padding: '24px' }}>
+        {(hasCurrentShipmentCoords || hasOtherShipmentsWithCoords) && (
+          <Card
+            title={t('shipments.details.location')}
+            style={{ marginBottom: '24px' }}
+          >
+            <ShipmentMap
+              lat={isEditing ? parseFloat(formData.lat) || shipment.lat : shipment.lat}
+              lng={isEditing ? parseFloat(formData.lng) || shipment.lng : shipment.lng}
+              shipments={showMapWithAllShipments && allShipments ? allShipments : null}
+              selectedShipmentId={showMapWithAllShipments ? shipment.id : null}
+            />
+          </Card>
+        )}
+
         {isEditing ? (
           <Form form={form} layout="vertical">
             <Descriptions column={1} bordered>
@@ -210,7 +219,7 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label={t('shipments.details.arrivalDate')}>
-                {formatDate(shipment.arrival_date, i18n.language)}
+                {formatDateTime(shipment.arrival_date, i18n.language)}
               </Descriptions.Item>
               <Descriptions.Item label={t('shipments.details.deliveryByDate')}>
                 <Form.Item name="delivery_by_date" style={{ margin: 0 }}>
@@ -242,7 +251,7 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
                     <Option value="">{t('common.none')}</Option>
                     {assignments.map((assignment) => (
                       <Option key={assignment.id} value={assignment.id}>
-                        {assignment.label}
+                        {assignment.id}
                       </Option>
                     ))}
                   </Select>
@@ -274,10 +283,10 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
               </StatusBadge>
             </Descriptions.Item>
             <Descriptions.Item label={t('shipments.details.arrivalDate')}>
-              {formatDate(shipment.arrival_date, i18n.language)}
+              {formatDateTime(shipment.arrival_date, i18n.language)}
             </Descriptions.Item>
             <Descriptions.Item label={t('shipments.details.deliveryByDate')}>
-              {formatDate(shipment.delivery_by_date, i18n.language)}
+              {formatDateTime(shipment.delivery_by_date, i18n.language)}
             </Descriptions.Item>
             <Descriptions.Item label={t('shipments.details.warehouseId')}>
               {shipment.warehouse_id}
@@ -286,20 +295,6 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
               {shipment.assignment_id || t('common.none')}
             </Descriptions.Item>
           </Descriptions>
-        )}
-
-        {(hasCurrentShipmentCoords || hasOtherShipmentsWithCoords) && (
-          <Card
-            title={t('shipments.details.location')}
-            style={{ marginTop: '24px' }}
-          >
-            <ShipmentMap
-              lat={isEditing ? parseFloat(formData.lat) || shipment.lat : shipment.lat}
-              lng={isEditing ? parseFloat(formData.lng) || shipment.lng : shipment.lng}
-              shipments={showMapWithAllShipments && allShipments ? allShipments : null}
-              selectedShipmentId={showMapWithAllShipments ? shipment.id : null}
-            />
-          </Card>
         )}
       </Content>
     </Layout>
