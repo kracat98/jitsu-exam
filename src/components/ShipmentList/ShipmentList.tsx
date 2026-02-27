@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { SHIPMENTS_PER_PAGE, useCreateShipment, useShipments } from '../../hooks/useShipments'
 import { useAssignments } from '../../hooks'
+import { parsePage } from '../../utils'
 import ShipmentListUI from './ShipmentListUI'
 import type { Shipment, CreateShipmentData } from '../../types'
 
@@ -22,17 +24,33 @@ const ShipmentList: React.FC<ShipmentListProps> = ({
   onSelect,
   onCreate,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [showForm, setShowForm] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
 
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [searchTerm])
+  const currentPage = parsePage(searchParams.get('page'))
+  const searchTerm = searchParams.get('q') ?? ''
+
+  const setCurrentPage = (page: number) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.set('page', String(page))
+      return next
+    })
+  }
+
+  const setSearchTerm = (value: string) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      if (value) next.set('q', value)
+      else next.delete('q')
+      next.set('page', '1')
+      return next
+    })
+  }
 
   const createShipmentMutation = useCreateShipment()
   const { data: assignments = [] } = useAssignments()
-  const { data: paginated, isLoading: shipmentsLoading } = useShipments(currentPage ?? 1, searchTerm ?? '')
+  const { data: paginated, isLoading: shipmentsLoading } = useShipments(currentPage, searchTerm)
   const shipments = paginated?.data ?? []
   const totalShipments = paginated?.total ?? 0
 

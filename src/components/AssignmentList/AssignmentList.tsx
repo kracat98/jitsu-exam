@@ -11,24 +11,40 @@ interface AssignmentListProps {
   selectedId?: string
   onSelect: (assignment: Assignment) => void
   onUpdate: () => void
+  /** Controlled from URL on Assignments page */
+  currentPage?: number
+  onPageChange?: (page: number) => void
+  searchTerm?: string
+  onSearchChange?: (value: string) => void
 }
 
 const AssignmentList: React.FC<AssignmentListProps> = ({
   selectedId,
   onSelect,
   onUpdate,
+  currentPage: controlledPage,
+  onPageChange,
+  searchTerm: controlledSearchTerm,
+  onSearchChange,
 }) => {
   const [showForm, setShowForm] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [internalSearchTerm, setInternalSearchTerm] = useState('')
+  const [internalPage, setInternalPage] = useState(1)
+
+  const isPageControlled = controlledPage !== undefined && onPageChange !== undefined
+  const isSearchControlled = controlledSearchTerm !== undefined && onSearchChange !== undefined
+  const currentPage = isPageControlled ? controlledPage : internalPage
+  const setCurrentPage = isPageControlled ? onPageChange! : setInternalPage
+  const searchTerm = isSearchControlled ? controlledSearchTerm : internalSearchTerm
+  const setSearchTerm = isSearchControlled ? onSearchChange! : setInternalSearchTerm
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [searchTerm])
+    if (!isPageControlled) setInternalPage(1)
+  }, [searchTerm, isPageControlled])
 
   const createMutation = useCreateAssignment()
   const { data: paginated, isLoading: assignmentsLoading } = useAssignmentsPaginated(
-    currentPage ?? 1,
+    currentPage,
     searchTerm ?? '',
   )
   const assignments = paginated?.data ?? []

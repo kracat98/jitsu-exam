@@ -1,7 +1,8 @@
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Layout, Typography, Button, Card, Space, Divider, Input, Pagination, Spin } from 'antd'
+import { Layout, Typography, Button, Card, Space, Pagination, Spin } from 'antd'
 import { StatusBadge } from '../shared/StatusBadge'
+import Search from '../shared/Search'
 import type { Assignment } from '../../types'
 import AssignmentForm from '../AssignmentForm/AssignmentForm'
 import { ASSIGNMENTS_PER_PAGE } from '../../hooks'
@@ -79,70 +80,88 @@ const AssignmentListUI: React.FC<AssignmentListUIProps> = memo(({
       {showForm && <AssignmentForm onSave={onCreate} onCancel={onHideForm} />}
 
       <Content style={{ overflow: 'auto', padding: '16px' }}>
-        <Input.Search
-          placeholder={t('assignments.searchPlaceholder')}
+        <Search
           value={searchTerm}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
+          onSearchChange={onSearchChange}
+          placeholder={t('assignments.searchPlaceholder')}
           allowClear
         />
-        {isLoading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
-            <Spin tip={t('common.loading')} />
-          </div>
-        ) : (
-          <>
-            {STATUS_ORDER.map((status) => {
-              const groupAssignments = groupedAssignments[status] || []
-              if (groupAssignments.length === 0) return null
+        <div style={{ marginTop: 16 }}>
+          {isLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 500,
+                padding: 24,
+              }}
+              aria-busy="true"
+              aria-live="polite"
+            >
+              <Spin tip={t('common.loading')} />
+            </div>
+          ) : (
+            <>
+              {STATUS_ORDER.map((status) => {
+                const groupAssignments = groupedAssignments[status] || []
+                if (groupAssignments.length === 0) return null
 
-              return (
-                <div key={status} style={{ marginBottom: '32px' }}>
-                  <Space style={{ marginBottom: '12px' }}>
-                    <StatusBadge status={status}>{t(`assignments.status.${status.toLowerCase()}`)}</StatusBadge>
-                    <Text type="secondary">({groupAssignments.length})</Text>
-                  </Space>
-                  <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                    {groupAssignments.map((assignment) => (
-                      <Card
-                        key={assignment.id}
-                        size="small"
-                        hoverable
-                        onClick={() => onSelect(assignment)}
-                        style={{
-                          cursor: 'pointer',
-                          borderColor: selectedId === assignment.id ? '#3498db' : undefined,
-                          backgroundColor: selectedId === assignment.id ? '#e3f2fd' : undefined,
-                        }}
-                      >
-                        <div style={{ marginBottom: '8px' }}>
-                          <Text strong>{assignment.label}</Text>
-                        </div>
-                        {assignment.clients && assignment.clients.length > 0 && (
-                          <div style={{ marginTop: '4px' }}>
-                            <Text type="secondary" style={{ fontSize: '0.85rem' }}>
-                              {assignment.clients.join(', ')}
-                            </Text>
+                return (
+                  <div key={status} style={{ marginBottom: '32px' }}>
+                    <Space style={{ marginBottom: '12px' }}>
+                      <StatusBadge status={status}>{t(`assignments.status.${status.toLowerCase()}`)}</StatusBadge>
+                      <Text type="secondary">({groupAssignments.length})</Text>
+                    </Space>
+                    <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                      {groupAssignments.map((assignment) => (
+                        <Card
+                          key={assignment.id}
+                          size="small"
+                          hoverable
+                          onClick={() => onSelect(assignment)}
+                          style={{
+                            cursor: 'pointer',
+                            borderColor: selectedId === assignment.id ? '#3498db' : undefined,
+                            backgroundColor: selectedId === assignment.id ? '#e3f2fd' : undefined,
+                          }}
+                        >
+                          <div style={{ marginBottom: '8px' }}>
+                            <Text strong>{assignment.label}</Text>
                           </div>
-                        )}
-                      </Card>
-                    ))}
-                  </Space>
+                          {assignment.clients && assignment.clients.length > 0 ? (
+                            <div style={{ marginTop: '4px' }}>
+                              <Text type="secondary" style={{ fontSize: '0.85rem' }}>
+                                {assignment.clients.join(', ')}
+                              </Text>
+                            </div>
+                          ) : (
+                            <div style={{ marginTop: '4px' }}>
+                              <Text type="secondary" style={{ fontSize: '0.85rem' }}>
+                                {t('common.none')}
+                              </Text>
+                            </div>
+                          )}
+                        </Card>
+                      ))}
+                    </Space>
+                  </div>
+                )
+              })}
+              {pagination && pagination.total > ASSIGNMENTS_PER_PAGE && (
+                <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+                  <Pagination
+                    current={pagination.current}
+                    total={pagination.total}
+                    pageSize={pagination.pageSize}
+                    onChange={pagination.onChange}
+                    showSizeChanger={false}
+                  />
                 </div>
-              )
-            })}
-            {pagination && pagination.total > ASSIGNMENTS_PER_PAGE && (
-              <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
-                <Pagination
-                  current={pagination.current}
-                  total={pagination.total}
-                  pageSize={pagination.pageSize}
-                  onChange={pagination.onChange}
-                  showSizeChanger={false}
-                />
-              </div>
-            )}
-          </>
-        )}
+              )}
+            </>
+          )}
+        </div>
       </Content>
     </Layout>
   )

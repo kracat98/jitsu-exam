@@ -12038,10 +12038,46 @@
       "clients": ["DHL"]
     },
     {
+      "id": "as_001",
       "label": "TX-130",
       "status": "OPEN",
-      "clients": [],
-      "id": "rZllQyc"
+      "clients": []
+    },
+    {
+      "id": "as_100",
+      "label": "FL-201",
+      "status": "OPEN",
+      "clients": ["DHL", "CargoTrans"]
+    },
+    {
+      "id": "as_101",
+      "label": "WA-305",
+      "status": "IN_TRANSIT",
+      "clients": ["Logix"]
+    },
+    {
+      "id": "as_102",
+      "label": "OR-406",
+      "status": "IN_TRANSIT",
+      "clients": ["Oceanic", "Sony"]
+    },
+    {
+      "id": "as_103",
+      "label": "AZ-507",
+      "status": "DELIVERED",
+      "clients": ["CargoTrans"]
+    },
+    {
+      "id": "as_104",
+      "label": "CO-608",
+      "status": "DELIVERED",
+      "clients": ["Samsung", "DHL"]
+    },
+    {
+      "id": "as_105",
+      "label": "IL-709",
+      "status": "OPEN",
+      "clients": ["ShipCo"]
     }
   ]
 }

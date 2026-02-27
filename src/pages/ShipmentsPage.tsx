@@ -1,27 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 import { Empty, Layout } from 'antd'
 import ShipmentDetails from '../components/ShipmentDetails/ShipmentDetails'
 import ShipmentList from '../components/ShipmentList/ShipmentList'
+import { useShipment } from '../hooks'
 import type { Shipment } from '../types'
 
 const { Content, Sider } = Layout
 
 const ShipmentsPage: React.FC = () => {
   const { t } = useTranslation()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const shipmentIdFromUrl = searchParams.get('shipmentId') ?? ''
+  const { data: shipmentFromUrl } = useShipment(shipmentIdFromUrl || undefined)
   const [selectedShipment, setSelectedShipment] = useState<Shipment | null>(null)
+
+  useEffect(() => {
+    if (shipmentFromUrl) setSelectedShipment(shipmentFromUrl)
+    else if (!shipmentIdFromUrl) setSelectedShipment(null)
+  }, [shipmentFromUrl, shipmentIdFromUrl])
 
   const handleShipmentSelect = (shipment: Shipment) => {
     setSelectedShipment(shipment)
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev)
+      next.set('shipmentId', shipment.id)
+      return next
+    })
   }
 
   const handleShipmentUpdate = (updatedShipment: Shipment) => {
     setSelectedShipment(updatedShipment)
+    if (selectedShipment?.id === updatedShipment.id) {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('shipmentId', updatedShipment.id)
+        return next
+      })
+    }
   }
 
   const handleShipmentDelete = (shipmentId: string) => {
     if (selectedShipment?.id === shipmentId) {
       setSelectedShipment(null)
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev)
+        next.delete('shipmentId')
+        return next
+      })
     }
   }
 

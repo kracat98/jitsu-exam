@@ -27,15 +27,24 @@ interface AssignmentDetailsProps {
   assignment: Assignment
   onShipmentSelect: (shipment: Shipment) => void
   selectedShipmentId?: string
+  /** Controlled from URL on Assignments page */
+  shipmentPage?: number
+  onShipmentPageChange?: (page: number) => void
 }
 
 const AssignmentDetails: React.FC<AssignmentDetailsProps> = memo(({
   assignment,
   onShipmentSelect,
   selectedShipmentId,
+  shipmentPage: controlledPage,
+  onShipmentPageChange,
 }) => {
   const { t, i18n } = useTranslation()
-  const [currentPage, setCurrentPage] = useState(1)
+  const [internalPage, setInternalPage] = useState(1)
+  const isControlled = controlledPage !== undefined && onShipmentPageChange !== undefined
+  const currentPage = isControlled ? controlledPage : internalPage
+  const setCurrentPage = isControlled ? onShipmentPageChange! : setInternalPage
+
   const deleteMutation = useDeleteAssignment()
   const { data: paginated, isLoading: shipmentsLoading } = useShipmentsByAssignment(
     assignment.id,
@@ -45,8 +54,8 @@ const AssignmentDetails: React.FC<AssignmentDetailsProps> = memo(({
   const totalShipments = paginated?.total ?? 0
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [assignment.id])
+    if (!isControlled) setInternalPage(1)
+  }, [assignment.id, isControlled])
 
   const handleDelete = async () => {
     if (totalShipments > 0) {
@@ -130,54 +139,68 @@ const AssignmentDetails: React.FC<AssignmentDetailsProps> = memo(({
           title={`${t('assignments.details.shipments')} (${totalShipments})`}
           style={{ marginTop: '24px' }}
         >
-          {shipmentsLoading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
-              <Spin tip={t('common.loading')} />
-            </div>
-          ) : shipments.length === 0 ? (
-            <Empty description={t('assignments.details.noShipments')} />
-          ) : (
-            <>
-              <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                {shipments.map((shipment) => (
-                  <Card
-                    key={shipment.id}
-                    size="small"
-                    hoverable
-                    onClick={() => onShipmentSelect(shipment)}
-                    style={{
-                      cursor: 'pointer',
-                      borderColor: selectedShipmentId === shipment.id ? '#3498db' : undefined,
-                      backgroundColor: selectedShipmentId === shipment.id ? '#e3f2fd' : undefined,
-                    }}
-                  >
-                    <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                      <Text strong>{shipment.label}</Text>
-                      <StatusBadge status={shipment.status}>
-                        {t(`shipments.status.${shipment.status.toLowerCase()}`)}
-                      </StatusBadge>
-                    </Space>
-                    <Divider style={{ margin: '8px 0' }} />
-                    <Space split={<Divider type="vertical" />}>
-                      <Text>{shipment.client_name}</Text>
-                      <Text type="secondary">{formatDate(shipment.arrival_date, i18n.language)}</Text>
-                    </Space>
-                  </Card>
-                ))}
-              </Space>
-              {totalShipments > SHIPMENTS_PER_PAGE && (
-                <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
-                  <Pagination
-                    current={currentPage}
-                    total={totalShipments}
-                    pageSize={SHIPMENTS_PER_PAGE}
-                    onChange={setCurrentPage}
-                    showSizeChanger={false}
-                  />
-                </div>
-              )}
-            </>
-          )}
+          <div style={{ minHeight: 600 }}>
+            {shipmentsLoading ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 200,
+                  padding: 24,
+                }}
+                aria-busy="true"
+                aria-live="polite"
+              >
+                <Spin tip={t('common.loading')} />
+              </div>
+            ) : shipments.length === 0 ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 200 }}>
+                <Empty description={t('assignments.details.noShipments')} />
+              </div>
+            ) : (
+              <>
+                <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                  {shipments.map((shipment) => (
+                    <Card
+                      key={shipment.id}
+                      size="small"
+                      hoverable
+                      onClick={() => onShipmentSelect(shipment)}
+                      style={{
+                        cursor: 'pointer',
+                        borderColor: selectedShipmentId === shipment.id ? '#3498db' : undefined,
+                        backgroundColor: selectedShipmentId === shipment.id ? '#e3f2fd' : undefined,
+                      }}
+                    >
+                      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+                        <Text strong>{shipment.label}</Text>
+                        <StatusBadge status={shipment.status}>
+                          {t(`shipments.status.${shipment.status.toLowerCase()}`)}
+                        </StatusBadge>
+                      </Space>
+                      <Divider style={{ margin: '8px 0' }} />
+                      <Space split={<Divider type="vertical" />}>
+                        <Text>{shipment.client_name}</Text>
+                        <Text type="secondary">{formatDate(shipment.arrival_date, i18n.language)}</Text>
+                      </Space>
+                    </Card>
+                  ))}
+                </Space>
+                {totalShipments > SHIPMENTS_PER_PAGE && (
+                  <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+                    <Pagination
+                      current={currentPage}
+                      total={totalShipments}
+                      pageSize={SHIPMENTS_PER_PAGE}
+                      onChange={setCurrentPage}
+                      showSizeChanger={false}
+                    />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </Card>
       </Content>
     </Layout>
