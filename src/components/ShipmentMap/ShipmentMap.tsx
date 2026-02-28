@@ -76,9 +76,9 @@ const ShipmentMap: React.FC<ShipmentMapProps> = memo(({ lat, lng, shipments = nu
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {polylinePositions.length > 1 && (
+          {/* {polylinePositions.length > 1 && (
             <Polyline positions={polylinePositions} color="#3498db" weight={3} opacity={0.7} />
-          )}
+          )} */}
           {shipmentsWithCoords.map((shipment) => (
             <Marker
               key={shipment.id}
