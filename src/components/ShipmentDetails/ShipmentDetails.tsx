@@ -6,8 +6,9 @@ import {
   useDeleteShipment,
   useShipmentsByAssignmentAll,
 } from '../../hooks/useShipments'
-import { useStatuses, useAssignments } from '../../hooks'
+import { useStatuses } from '../../hooks'
 import { StatusBadge } from '../shared/StatusBadge'
+import AssignmentsSelect from '../shared/AssignmentsSelect'
 import ShipmentMap from '../ShipmentMap/ShipmentMap'
 import type { Shipment, ShipmentFormData } from '../../types'
 import { formatDateTime } from '../../utils'
@@ -34,7 +35,6 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
 }) => {
   const { t, i18n } = useTranslation()
   const { data: statuses = [] } = useStatuses()
-  const { data: assignments = [] } = useAssignments()
   const { data: assignmentShipments = [] } = useShipmentsByAssignmentAll(
     showMapWithAllShipments && assignmentId ? assignmentId : undefined,
   )
@@ -86,6 +86,7 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
   const handleSave = async () => {
     try {
       const values = form.getFieldsValue()
+      console.log(values)
       const updatedShipment: Partial<Shipment> = {
         ...shipment,
         status: values.status as Shipment['status'],
@@ -247,14 +248,20 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
                   ]}
                   style={{ margin: 0 }}
                 >
-                  <Select disabled={formData.status === 'OPEN'} placeholder={t('common.none')}>
-                    <Option value="">{t('common.none')}</Option>
-                    {assignments.map((assignment) => (
-                      <Option key={assignment.id} value={assignment.id}>
-                        {assignment.id}
-                      </Option>
-                    ))}
-                  </Select>
+                  <AssignmentsSelect
+                    currentValue={shipment.assignment_id}
+                    onChange={(value: string) => {
+                      setFormData((prev) => {
+                        const newData = { ...prev, assignment_id: value }
+                        form.setFieldsValue({ assignment_id: newData.assignment_id })
+                        return newData
+                      })
+                    }}
+                    disabled={formData.status === 'OPEN'}
+                    placeholder={t('common.none')}
+                    noneOptionLabel={t('common.none')}
+                    allowClear
+                  />
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label={t('shipments.details.latitude')}>

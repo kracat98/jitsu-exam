@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Form, Input, Select, Button, Space } from 'antd'
-import type { CreateShipmentData, Assignment } from '../../types'
+import type { CreateShipmentData } from '../../types'
+import AssignmentsSelect from '../shared/AssignmentsSelect'
 
 const { Option } = Select
 
 interface ShipmentFormProps {
   onSave: (data: CreateShipmentData) => void
   onCancel: () => void
-  assignments?: Assignment[]
 }
 
-const ShipmentForm: React.FC<ShipmentFormProps> = ({ onSave, onCancel, assignments = [] }) => {
+const ShipmentForm: React.FC<ShipmentFormProps> = ({ onSave, onCancel }) => {
   const { t } = useTranslation()
   const [form] = Form.useForm()
   const [formData, setFormData] = useState({
@@ -141,17 +141,20 @@ const ShipmentForm: React.FC<ShipmentFormProps> = ({ onSave, onCancel, assignmen
             },
           ]}
         >
-          <Select
-            disabled={form.getFieldValue('status') === 'OPEN'}
+          <AssignmentsSelect
+            currentValue={''}
+            onChange={(value: string) => {
+              setFormData((prev) => {
+                const newData = { ...prev, assignment_id: value }
+                form.setFieldsValue({ assignment_id: newData.assignment_id })
+                return newData
+              })
+            }}
+            disabled={formData.status === 'OPEN'}
             placeholder={t('common.none')}
-          >
-            <Option value="">{t('common.none')}</Option>
-            {assignments.map((assignment) => (
-              <Option key={assignment.id} value={assignment.id}>
-                {assignment.label}
-              </Option>
-            ))}
-          </Select>
+            noneOptionLabel={t('common.none')}
+            allowClear
+          />
         </Form.Item>
 
         <Form.Item name="lat" label={t('shipments.form.latitude')}>

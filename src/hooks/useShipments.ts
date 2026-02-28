@@ -10,7 +10,7 @@ import {
 } from "../services/api";
 import type { Shipment, CreateShipmentData } from "../types";
 
-const PER_PAGE = 5;
+const PER_PAGE = 10;
 
 export const useShipments = (page: number, searchTerm?: string) => {
   return useQuery({
@@ -25,13 +25,14 @@ export const useShipmentsByAssignment = (
 ) => {
   return useQuery({
     queryKey: ["shipments", "byAssignment", assignmentId, page],
-    queryFn: () =>
-      getShipmentsByAssignmentId(assignmentId!, page, PER_PAGE),
+    queryFn: () => getShipmentsByAssignmentId(assignmentId!, page, PER_PAGE),
     enabled: !!assignmentId,
   });
 };
 
-export const useShipmentsByAssignmentAll = (assignmentId: string | undefined) => {
+export const useShipmentsByAssignmentAll = (
+  assignmentId: string | undefined,
+) => {
   return useQuery({
     queryKey: ["shipments", "byAssignment", assignmentId, "all"],
     queryFn: () => getShipmentsByAssignmentIdAll(assignmentId!),

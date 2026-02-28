@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { SHIPMENTS_PER_PAGE, useCreateShipment, useShipments } from '../../hooks/useShipments'
-import { useAssignments } from '../../hooks'
 import { parsePage } from '../../utils'
 import ShipmentListUI from './ShipmentListUI'
 import type { Shipment, CreateShipmentData } from '../../types'
@@ -49,7 +48,6 @@ const ShipmentList: React.FC<ShipmentListProps> = ({
   }
 
   const createShipmentMutation = useCreateShipment()
-  const { data: assignments = [] } = useAssignments()
   const { data: paginated, isLoading: shipmentsLoading } = useShipments(currentPage, searchTerm)
   const shipments = paginated?.data ?? []
   const totalShipments = paginated?.total ?? 0
@@ -74,7 +72,6 @@ const ShipmentList: React.FC<ShipmentListProps> = ({
       onShowForm={() => setShowForm(true)}
       onHideForm={() => setShowForm(false)}
       onCreate={handleCreate}
-      assignments={assignments}
       searchTerm={searchTerm}
       onSearchChange={setSearchTerm}
       pagination={{

@@ -44,7 +44,7 @@ function AppContent() {
           items={menuItems}
           style={{ flex: 1, minWidth: 0, background: 'transparent', border: 'none' }}
         />
-        <Space>
+        {/* <Space>
           <Select
             value={i18n.language}
             onChange={handleLanguageChange}
@@ -54,7 +54,7 @@ function AppContent() {
               { value: 'vi', label: t('language.vietnamese') },
             ]}
           />
-        </Space>
+        </Space> */}
       </Header>
       <Content style={{ height: 'calc(100vh - 64px)', overflow: 'hidden' }}>
         <Routes>

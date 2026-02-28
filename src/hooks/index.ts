@@ -11,6 +11,7 @@ export {
 export {
   useAssignments,
   useAssignmentsPaginated,
+  useAssignmentsInfinite,
   useAssignment,
   useCreateAssignment,
   useUpdateAssignment,

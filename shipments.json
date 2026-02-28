@@ -22,7 +22,7 @@
       "warehouse_id": "581",
       "lat": 32.576416240335654,
       "lng": -97.08961338786524,
-      "assignment_id": "as_123"
+      "assignment_id": "as_002"
     },
     {
       "id": "shp_0002",
@@ -54,13 +54,14 @@
       "id": "shp_0004",
       "client_name": "ShipCo",
       "label": "SEA-581-250524-4",
-      "status": "OPEN",
+      "status": "DELIVERED",
       "arrival_date": "2026-02-26T03:39:38.009Z",
-      "delivery_by_date": "2026-02-28T03:39:38.009Z",
+      "delivery_by_date": "2026-02-28T00:00:00.000Z",
       "eta": "2026-02-27T13:39:38.009Z",
       "warehouse_id": "581",
       "lat": 32.6262269214041,
-      "lng": -97.39826379377604
+      "lng": -97.39826379377604,
+      "assignment_id": "as_4567"
     },
     {
       "id": "shp_0005",
@@ -12023,19 +12024,26 @@
       "id": "as_002",
       "label": "TX-127",
       "status": "OPEN",
-      "clients": ["Samsung", "ShipCo"]
+      "clients": [
+        "Samsung",
+        "ShipCo"
+      ]
     },
     {
       "id": "as_123",
       "label": "CA-456",
       "status": "IN_TRANSIT",
-      "clients": ["SamSung"]
+      "clients": [
+        "SamSung"
+      ]
     },
     {
       "id": "as_4567",
       "label": "NY-789",
       "status": "DELIVERED",
-      "clients": ["DHL"]
+      "clients": [
+        "DHL"
+      ]
     },
     {
       "id": "as_001",
@@ -12047,37 +12055,760 @@
       "id": "as_100",
       "label": "FL-201",
       "status": "OPEN",
-      "clients": ["DHL", "CargoTrans"]
+      "clients": [
+        "DHL",
+        "CargoTrans"
+      ]
     },
     {
       "id": "as_101",
       "label": "WA-305",
       "status": "IN_TRANSIT",
-      "clients": ["Logix"]
+      "clients": [
+        "Logix"
+      ]
     },
     {
       "id": "as_102",
       "label": "OR-406",
       "status": "IN_TRANSIT",
-      "clients": ["Oceanic", "Sony"]
+      "clients": [
+        "Oceanic",
+        "Sony"
+      ]
     },
     {
       "id": "as_103",
       "label": "AZ-507",
       "status": "DELIVERED",
-      "clients": ["CargoTrans"]
+      "clients": [
+        "CargoTrans"
+      ]
     },
     {
       "id": "as_104",
       "label": "CO-608",
       "status": "DELIVERED",
-      "clients": ["Samsung", "DHL"]
+      "clients": [
+        "Samsung",
+        "DHL"
+      ]
     },
     {
       "id": "as_105",
       "label": "IL-709",
       "status": "OPEN",
-      "clients": ["ShipCo"]
+      "clients": [
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "bWaCq_B",
+      "label": "TX-135",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "DHL"
+      ]
+    },
+    {
+      "id": "as_106",
+      "label": "TX-200",
+      "status": "OPEN",
+      "clients": [
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_107",
+      "label": "CA-203",
+      "status": "DELIVERED",
+      "clients": [
+        "Oceanic",
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_108",
+      "label": "NY-206",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_109",
+      "label": "FL-209",
+      "status": "OPEN",
+      "clients": [
+        "DHL",
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_110",
+      "label": "WA-212",
+      "status": "DELIVERED",
+      "clients": [
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_111",
+      "label": "OR-215",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "Oceanic",
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_112",
+      "label": "AZ-218",
+      "status": "OPEN",
+      "clients": [
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_113",
+      "label": "CO-221",
+      "status": "DELIVERED",
+      "clients": [
+        "DHL",
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_114",
+      "label": "IL-224",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_115",
+      "label": "GA-227",
+      "status": "OPEN",
+      "clients": [
+        "Oceanic",
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_116",
+      "label": "NC-230",
+      "status": "DELIVERED",
+      "clients": [
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_117",
+      "label": "OH-233",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "DHL",
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_118",
+      "label": "MI-236",
+      "status": "OPEN",
+      "clients": [
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_119",
+      "label": "PA-239",
+      "status": "DELIVERED",
+      "clients": [
+        "Oceanic",
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_120",
+      "label": "VA-242",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_121",
+      "label": "MA-245",
+      "status": "OPEN",
+      "clients": [
+        "DHL",
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_122",
+      "label": "IN-248",
+      "status": "DELIVERED",
+      "clients": [
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_124",
+      "label": "TN-251",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_125",
+      "label": "MO-254",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_126",
+      "label": "MD-257",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_127",
+      "label": "WI-260",
+      "status": "DELIVERED",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_128",
+      "label": "MN-263",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_129",
+      "label": "NV-266",
+      "status": "OPEN",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_130",
+      "label": "NJ-269",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_131",
+      "label": "SC-272",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_132",
+      "label": "AL-275",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_133",
+      "label": "LA-278",
+      "status": "DELIVERED",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_134",
+      "label": "KY-281",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_135",
+      "label": "CT-284",
+      "status": "OPEN",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_136",
+      "label": "OK-287",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_137",
+      "label": "TX-290",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_138",
+      "label": "CA-293",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_139",
+      "label": "NY-296",
+      "status": "DELIVERED",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_140",
+      "label": "FL-299",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_141",
+      "label": "WA-302",
+      "status": "OPEN",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_142",
+      "label": "OR-305",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_143",
+      "label": "AZ-308",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_144",
+      "label": "CO-311",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_145",
+      "label": "IL-314",
+      "status": "DELIVERED",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_146",
+      "label": "GA-317",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_147",
+      "label": "NC-320",
+      "status": "OPEN",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_148",
+      "label": "OH-323",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_149",
+      "label": "MI-326",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_150",
+      "label": "PA-329",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_151",
+      "label": "VA-332",
+      "status": "DELIVERED",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_152",
+      "label": "MA-335",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_153",
+      "label": "IN-338",
+      "status": "OPEN",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_154",
+      "label": "TN-341",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_155",
+      "label": "MO-344",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_156",
+      "label": "MD-347",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_157",
+      "label": "WI-350",
+      "status": "DELIVERED",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_158",
+      "label": "MN-353",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_159",
+      "label": "NV-356",
+      "status": "OPEN",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_160",
+      "label": "NJ-359",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_161",
+      "label": "SC-362",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_162",
+      "label": "AL-365",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_163",
+      "label": "LA-368",
+      "status": "DELIVERED",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_164",
+      "label": "KY-371",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_165",
+      "label": "CT-374",
+      "status": "OPEN",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_166",
+      "label": "OK-377",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_167",
+      "label": "TX-380",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_168",
+      "label": "CA-383",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_169",
+      "label": "NY-386",
+      "status": "DELIVERED",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_170",
+      "label": "FL-389",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_171",
+      "label": "WA-392",
+      "status": "OPEN",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_172",
+      "label": "OR-395",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_173",
+      "label": "AZ-398",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_174",
+      "label": "CO-401",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_175",
+      "label": "IL-404",
+      "status": "DELIVERED",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_176",
+      "label": "GA-407",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_177",
+      "label": "NC-410",
+      "status": "OPEN",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_178",
+      "label": "OH-413",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_179",
+      "label": "MI-416",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_180",
+      "label": "PA-419",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_181",
+      "label": "VA-422",
+      "status": "DELIVERED",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_182",
+      "label": "MA-425",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_183",
+      "label": "IN-428",
+      "status": "OPEN",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_184",
+      "label": "TN-431",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_185",
+      "label": "MO-434",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_186",
+      "label": "MD-437",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_187",
+      "label": "WI-440",
+      "status": "DELIVERED",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_188",
+      "label": "MN-443",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_189",
+      "label": "NV-446",
+      "status": "OPEN",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_190",
+      "label": "NJ-449",
+      "status": "DELIVERED",
+      "clients": []
+    },
+    {
+      "id": "as_191",
+      "label": "SC-452",
+      "status": "IN_TRANSIT",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "id": "as_192",
+      "label": "AL-455",
+      "status": "OPEN",
+      "clients": []
+    },
+    {
+      "id": "as_193",
+      "label": "LA-458",
+      "status": "DELIVERED",
+      "clients": [
+        "SamSung",
+        "Sony"
+      ]
+    },
+    {
+      "id": "as_194",
+      "label": "KY-461",
+      "status": "IN_TRANSIT",
+      "clients": []
+    },
+    {
+      "id": "as_195",
+      "label": "CT-464",
+      "status": "OPEN",
+      "clients": [
+        "CargoTrans",
+        "ShipCo"
+      ]
+    },
+    {
+      "label": "test",
+      "status": "DELIVERED",
+      "clients": [
+        "clients test"
+      ],
+      "id": "ZbXxDCg"
     }
   ]
 }

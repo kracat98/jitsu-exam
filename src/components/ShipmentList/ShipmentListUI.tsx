@@ -7,6 +7,7 @@ import type { Shipment, Assignment } from '../../types'
 import ShipmentForm from '../ShipmentForm/ShipmentForm'
 import type { PaginationConfig } from './ShipmentList'
 import { formatDate } from '../../utils'
+import { SHIPMENTS_PER_PAGE } from '../../hooks/useShipments'
 
 const { Header, Content } = Layout
 const { Title, Text } = Typography
@@ -21,7 +22,6 @@ interface ShipmentListUIProps {
   onShowForm: () => void
   onHideForm: () => void
   onCreate: (shipment: any) => void
-  assignments?: Assignment[]
   searchTerm: string
   onSearchChange: (value: string) => void
   pagination?: PaginationConfig
@@ -36,7 +36,6 @@ const ShipmentListUI: React.FC<ShipmentListUIProps> = memo(({
   onShowForm,
   onHideForm,
   onCreate,
-  assignments = [],
   searchTerm,
   onSearchChange,
   pagination,
@@ -74,7 +73,7 @@ const ShipmentListUI: React.FC<ShipmentListUIProps> = memo(({
       </Header>
 
       {showForm && (
-        <ShipmentForm onSave={onCreate} onCancel={onHideForm} assignments={assignments} />
+        <ShipmentForm onSave={onCreate} onCancel={onHideForm} />
       )}
 
       <Content style={{ overflow: 'auto', padding: '16px' }}>
@@ -140,7 +139,7 @@ const ShipmentListUI: React.FC<ShipmentListUIProps> = memo(({
             </>
           )}
         </div>
-        {pagination && (
+        {pagination && pagination.total > SHIPMENTS_PER_PAGE && (
           <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
             <Pagination
               current={pagination.current}

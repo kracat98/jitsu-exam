@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   getAssignments,
   getAssignmentsPaginated,
@@ -6,65 +11,88 @@ import {
   createAssignment,
   updateAssignment,
   deleteAssignment,
-} from '../services/api'
-import type { CreateAssignmentData } from '../types'
+} from "../services/api";
+import type { CreateAssignmentData } from "../types";
 
-const ASSIGNMENTS_PER_PAGE = 5
+const ASSIGNMENTS_PER_PAGE = 10;
+const ASSIGNMENTS_INFINITE_PAGE_SIZE = 10;
 
 export const useAssignments = () => {
   return useQuery({
-    queryKey: ['assignments'],
+    queryKey: ["assignments"],
     queryFn: getAssignments,
-  })
-}
+  });
+};
 
-export const useAssignmentsPaginated = (page: number = 1, searchTerm?: string) => {
+export const useAssignmentsPaginated = (
+  page: number = 1,
+  searchTerm?: string,
+) => {
   return useQuery({
-    queryKey: ['assignments', 'paginated', page, searchTerm ?? ''],
-    queryFn: () => getAssignmentsPaginated(page, ASSIGNMENTS_PER_PAGE, searchTerm),
-  })
-}
+    queryKey: ["assignments", "paginated", page, searchTerm ?? ""],
+    queryFn: () =>
+      getAssignmentsPaginated(page, ASSIGNMENTS_PER_PAGE, searchTerm),
+  });
+};
 
-export { ASSIGNMENTS_PER_PAGE }
+export const useAssignmentsInfinite = () => {
+  return useInfiniteQuery({
+    queryKey: ["assignments", "infinite"],
+    queryFn: ({ pageParam }) =>
+      getAssignmentsPaginated(pageParam, ASSIGNMENTS_INFINITE_PAGE_SIZE),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const loaded = allPages.reduce((sum, p) => sum + p.data.length, 0);
+      return loaded < lastPage.total ? allPages.length + 1 : undefined;
+    },
+  });
+};
+
+export { ASSIGNMENTS_PER_PAGE };
 
 export const useAssignment = (id: string | undefined) => {
   return useQuery({
-    queryKey: ['assignments', id],
+    queryKey: ["assignments", id],
     queryFn: () => getAssignment(id!),
     enabled: !!id,
-  })
-}
+  });
+};
 
 export const useCreateAssignment = () => {
-  const queryClient = useQueryClient()
-  
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (data: CreateAssignmentData) => createAssignment(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assignments'] })
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
     },
-  })
-}
+  });
+};
 
 export const useUpdateAssignment = () => {
-  const queryClient = useQueryClient()
-  
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateAssignmentData> }) =>
-      updateAssignment(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<CreateAssignmentData>;
+    }) => updateAssignment(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assignments'] })
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
     },
-  })
-}
+  });
+};
 
 export const useDeleteAssignment = () => {
-  const queryClient = useQueryClient()
-  
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (id: string) => deleteAssignment(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assignments'] })
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
     },
-  })
-}
+  });
+};
