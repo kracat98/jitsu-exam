@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Layout, Typography, Button, Card, Space, Pagination, Spin } from 'antd'
-import { StatusBadge } from '../shared/StatusBadge'
-import Search from '../shared/Search'
+import { StatusBadge } from '../../components/shared/StatusBadge'
+import Search from '../../components/shared/Search'
 import type { Assignment } from '../../types'
-import AssignmentForm from '../AssignmentForm/AssignmentForm'
+import AssignmentForm from './AssignmentForm'
 import { ASSIGNMENTS_PER_PAGE } from '../../hooks'
 
 const { Header, Content } = Layout

@@ -4,33 +4,23 @@ import {
   useAssignmentsPaginated,
   useCreateAssignment,
 } from '../../hooks'
+import { useAssignmentsInformation } from '../../hooks/useAssignmentsInformation'
+import type { CreateAssignmentData } from '../../types'
 import AssignmentListUI from './AssignmentListUI'
-import type { Assignment, CreateAssignmentData } from '../../types'
 
 interface AssignmentListProps {
-  selectedId?: string
-  onSelect: (assignment: Assignment) => void
   onUpdate: () => void
-  /** Controlled from URL on Assignments page */
-  currentPage?: number
-  onPageChange?: (page: number) => void
-  searchTerm?: string
-  onSearchChange?: (value: string) => void
 }
 
 const AssignmentList: React.FC<AssignmentListProps> = ({
-  selectedId,
-  onSelect,
   onUpdate,
-  currentPage: controlledPage,
-  onPageChange,
-  searchTerm: controlledSearchTerm,
-  onSearchChange,
 }) => {
   const [showForm, setShowForm] = useState(false)
   const [internalSearchTerm, setInternalSearchTerm] = useState('')
   const [internalPage, setInternalPage] = useState(1)
+  const { selectedAssignment, assignmentSearchFromUrl: controlledSearchTerm, assignmentPage: controlledPage, setAssignmentPage: onPageChange, setAssignmentSearch: onSearchChange, handleAssignmentSelect: onSelect } = useAssignmentsInformation()
 
+  const selectedId = selectedAssignment?.id
   const isPageControlled = controlledPage !== undefined && onPageChange !== undefined
   const isSearchControlled = controlledSearchTerm !== undefined && onSearchChange !== undefined
   const currentPage = isPageControlled ? controlledPage : internalPage

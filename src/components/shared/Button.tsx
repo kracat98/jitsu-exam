@@ -1,6 +1,6 @@
 import { Button as AntButton, ButtonProps } from 'antd'
 
-interface CustomButtonProps extends Omit<ButtonProps, 'type'> {
+interface CustomButtonProps extends Omit<ButtonProps, 'type' | 'variant'> {
   variant?: 'primary' | 'danger' | 'secondary'
 }
 

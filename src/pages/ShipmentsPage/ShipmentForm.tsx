@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Form, Input, Select, Button, Space } from 'antd'
 import type { CreateShipmentData } from '../../types'
-import AssignmentsSelect from '../shared/AssignmentsSelect'
+import AssignmentsSelect from '../../components/shared/AssignmentsSelect'
 
 const { Option } = Select
 

@@ -117,13 +117,14 @@
       "id": "shp_0009",
       "client_name": "Samsung",
       "label": "SEA-581-250529-9",
-      "status": "OPEN",
+      "status": "DELIVERED",
       "arrival_date": "2026-02-21T03:39:38.009Z",
-      "delivery_by_date": "2026-02-23T03:39:38.009Z",
+      "delivery_by_date": "2026-02-23T00:00:00.000Z",
       "eta": "2026-02-22T04:39:38.009Z",
       "warehouse_id": "581",
       "lat": 32.80927833520521,
-      "lng": -96.77561063429299
+      "lng": -96.77561063429299,
+      "assignment_id": "as_002"
     },
     {
       "id": "shp_0010",
@@ -11896,18 +11897,6 @@
       "warehouse_id": "581",
       "lat": 32.97185046078796,
       "lng": -97.37542004011112
-    },
-    {
-      "id": "shp_0991",
-      "client_name": "SamSung",
-      "label": "LAX-581-250521-991",
-      "status": "OPEN",
-      "arrival_date": "2026-02-24T03:39:38.009Z",
-      "delivery_by_date": "2026-02-26T03:39:38.009Z",
-      "eta": "2026-02-25T13:39:38.009Z",
-      "warehouse_id": "581",
-      "lat": 33.01987945461047,
-      "lng": -96.80946116474928
     },
     {
       "id": "shp_0992",

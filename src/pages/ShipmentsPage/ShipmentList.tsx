@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { SHIPMENTS_PER_PAGE, useCreateShipment, useShipments } from '../../hooks/useShipments'
+import { useShipmentsInformation } from '../../hooks/useShipmentsInformation'
+import type { CreateShipmentData } from '../../types'
 import { parsePage } from '../../utils'
 import ShipmentListUI from './ShipmentListUI'
-import type { Shipment, CreateShipmentData } from '../../types'
 
 export interface PaginationConfig {
   current: number
@@ -13,19 +14,17 @@ export interface PaginationConfig {
 }
 
 interface ShipmentListProps {
-  selectedId?: string
-  onSelect: (shipment: Shipment) => void
   onCreate: () => void
 }
 
 const ShipmentList: React.FC<ShipmentListProps> = ({
-  selectedId,
-  onSelect,
   onCreate,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [showForm, setShowForm] = useState(false)
+  const { selectedShipment, handleShipmentSelect: onSelect } = useShipmentsInformation()
 
+  const selectedId = selectedShipment?.id
   const currentPage = parsePage(searchParams.get('page'))
   const searchTerm = searchParams.get('q') ?? ''
 

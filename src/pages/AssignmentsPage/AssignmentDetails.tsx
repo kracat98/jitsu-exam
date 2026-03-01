@@ -1,46 +1,41 @@
-import { useState, useEffect, memo } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
-  Layout,
-  Typography,
   Button,
-  Space,
-  Descriptions,
   Card,
-  Empty,
-  Modal,
+  Descriptions,
   Divider,
+  Empty,
+  Layout,
+  Modal,
   Pagination,
+  Space,
   Spin,
   Tooltip,
+  Typography,
 } from 'antd'
+import { memo, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { StatusBadge } from '../../components/shared/StatusBadge'
+import { SHIPMENTS_PER_PAGE, useShipmentsByAssignment } from '../../hooks'
 import { useDeleteAssignment } from '../../hooks/useAssignments'
-import { useShipmentsByAssignment, SHIPMENTS_PER_PAGE } from '../../hooks'
-import { StatusBadge } from '../shared/StatusBadge'
-import type { Assignment, Shipment } from '../../types'
+import { useAssignmentsInformation } from '../../hooks/useAssignmentsInformation'
 import { formatDate } from '../../utils'
+import { Assignment } from '../../types'
 
 const { Header, Content } = Layout
 const { Title, Text } = Typography
 
 interface AssignmentDetailsProps {
   assignment: Assignment
-  onShipmentSelect: (shipment: Shipment) => void
-  selectedShipmentId?: string
-  /** Controlled from URL on Assignments page */
-  shipmentPage?: number
-  onShipmentPageChange?: (page: number) => void
 }
 
 const AssignmentDetails: React.FC<AssignmentDetailsProps> = memo(({
   assignment,
-  onShipmentSelect,
-  selectedShipmentId,
-  shipmentPage: controlledPage,
-  onShipmentPageChange,
 }) => {
   const { t, i18n } = useTranslation()
   const [internalPage, setInternalPage] = useState(1)
+  const { selectedShipment, shipmentPage: controlledPage, setShipmentPage: onShipmentPageChange, handleShipmentSelect: onShipmentSelect } = useAssignmentsInformation()
+
+  const selectedShipmentId = selectedShipment?.id
   const isControlled = controlledPage !== undefined && onShipmentPageChange !== undefined
   const currentPage = isControlled ? controlledPage : internalPage
   const setCurrentPage = isControlled ? onShipmentPageChange! : setInternalPage

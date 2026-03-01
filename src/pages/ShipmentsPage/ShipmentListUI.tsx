@@ -1,13 +1,13 @@
+import { Button, Card, Divider, Layout, Pagination, Space, Spin, Typography } from 'antd'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Layout, Typography, Button, Card, Space, Divider, Pagination, Spin } from 'antd'
-import { StatusBadge } from '../shared/StatusBadge'
-import Search from '../shared/Search'
-import type { Shipment, Assignment } from '../../types'
-import ShipmentForm from '../ShipmentForm/ShipmentForm'
-import type { PaginationConfig } from './ShipmentList'
-import { formatDate } from '../../utils'
+import Search from '../../components/shared/Search'
+import { StatusBadge } from '../../components/shared/StatusBadge'
+import ShipmentForm from './ShipmentForm'
 import { SHIPMENTS_PER_PAGE } from '../../hooks/useShipments'
+import type { Shipment } from '../../types'
+import { formatDate } from '../../utils'
+import type { PaginationConfig } from './ShipmentList'
 
 const { Header, Content } = Layout
 const { Title, Text } = Typography
@@ -111,7 +111,7 @@ const ShipmentListUI: React.FC<ShipmentListUIProps> = memo(({
                       <Text type="secondary">({groupShipments.length})</Text>
                     </Space>
                     <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                      {groupShipments.map((shipment) => (
+                      {groupShipments.map((shipment: Shipment) => (
                         <Card
                           key={shipment.id}
                           size="small"

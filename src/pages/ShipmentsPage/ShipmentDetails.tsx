@@ -1,17 +1,18 @@
 import { useState, useEffect, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Layout, Typography, Button, Space, Descriptions, Modal, Input, Select, Form } from 'antd'
+import { Card, Layout, Typography, Button, Space, Descriptions, Modal, Input, Select, Form, Empty } from 'antd'
 import {
   useUpdateShipment,
   useDeleteShipment,
   useShipmentsByAssignmentAll,
 } from '../../hooks/useShipments'
 import { useStatuses } from '../../hooks'
-import { StatusBadge } from '../shared/StatusBadge'
-import AssignmentsSelect from '../shared/AssignmentsSelect'
-import ShipmentMap from '../ShipmentMap/ShipmentMap'
 import type { Shipment, ShipmentFormData } from '../../types'
 import { formatDateTime } from '../../utils'
+import ShipmentMap from '../../components/ShipmentMap'
+import AssignmentsSelect from '../../components/shared/AssignmentsSelect'
+import { StatusBadge } from '../../components/shared/StatusBadge'
+import { useShipmentsInformation } from '../../hooks/useShipmentsInformation'
 
 const { Header, Content } = Layout
 const { Title } = Typography
@@ -19,8 +20,6 @@ const { Option } = Select
 
 interface ShipmentDetailsProps {
   shipment: Shipment
-  onUpdate: (shipment: Shipment) => void
-  onDelete: (id: string) => void
   showMapWithAllShipments?: boolean
   /** When on assignment page, pass assignment id to load all assignment shipments for the map */
   assignmentId?: string | null
@@ -28,8 +27,6 @@ interface ShipmentDetailsProps {
 
 const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
   shipment,
-  onUpdate,
-  onDelete,
   showMapWithAllShipments = false,
   assignmentId = null,
 }) => {
@@ -38,6 +35,8 @@ const ShipmentDetails: React.FC<ShipmentDetailsProps> = memo(({
   const { data: assignmentShipments = [] } = useShipmentsByAssignmentAll(
     showMapWithAllShipments && assignmentId ? assignmentId : undefined,
   )
+  const { handleShipmentUpdate: onUpdate, handleShipmentDelete: onDelete } = useShipmentsInformation()
+
   const allShipments = showMapWithAllShipments && assignmentId ? assignmentShipments : null
   const [form] = Form.useForm()
   const [formData, setFormData] = useState<ShipmentFormData>({
