@@ -1,20 +1,24 @@
+import { Button, Layout, Space, Typography } from 'antd'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import ItemList from '../../components/ItemList/ItemList'
 import {
   ASSIGNMENTS_PER_PAGE,
-  useAssignmentsPaginated,
-  useCreateAssignment,
+  useAssignmentsPaginated
 } from '../../hooks'
 import { useAssignmentsInformation } from '../../hooks/useAssignmentsInformation'
-import type { CreateAssignmentData } from '../../types'
-import AssignmentListUI from './AssignmentListUI'
+import type { Assignment } from '../../types'
+import AssignmentForm from './AssignmentForm'
+
+const { Header, Content } = Layout
+const { Title, Text } = Typography
 
 interface AssignmentListProps {
   onUpdate: () => void
 }
 
-const AssignmentList: React.FC<AssignmentListProps> = ({
-  onUpdate,
-}) => {
+const AssignmentList: React.FC<AssignmentListProps> = () => {
+  const { t } = useTranslation()
   const [showForm, setShowForm] = useState(false)
   const [internalSearchTerm, setInternalSearchTerm] = useState('')
   const [internalPage, setInternalPage] = useState(1)
@@ -32,7 +36,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({
     if (!isPageControlled) setInternalPage(1)
   }, [searchTerm, isPageControlled])
 
-  const createMutation = useCreateAssignment()
   const { data: paginated, isLoading: assignmentsLoading } = useAssignmentsPaginated(
     currentPage,
     searchTerm ?? '',
@@ -40,37 +43,55 @@ const AssignmentList: React.FC<AssignmentListProps> = ({
   const assignments = paginated?.data ?? []
   const totalAssignments = paginated?.total ?? 0
 
-  const handleCreate = async (data: CreateAssignmentData) => {
-    try {
-      await createMutation.mutateAsync(data)
-      setShowForm(false)
-      onUpdate()
-    } catch (error) {
-      console.error('Error creating assignment:', error)
-      alert('Failed to create assignment')
-    }
+  const pagination = {
+    current: currentPage,
+    total: totalAssignments,
+    pageSize: ASSIGNMENTS_PER_PAGE,
+    onChange: setCurrentPage,
   }
 
   return (
-    <AssignmentListUI
-      assignments={assignments}
-      isLoading={assignmentsLoading}
-      selectedId={selectedId}
-      onSelect={onSelect}
-      showForm={showForm}
-      onShowForm={() => setShowForm(true)}
-      onHideForm={() => setShowForm(false)}
-      onCreate={handleCreate}
-      searchTerm={searchTerm}
-      onSearchChange={setSearchTerm}
-      pagination={{
-        current: currentPage,
-        total: totalAssignments,
-        pageSize: ASSIGNMENTS_PER_PAGE,
-        onChange: setCurrentPage,
-      }}
-    />
-  )
+    <Layout style={{ height: '100%' }}>
+      <Header
+        style={{
+          background: '#f8f9fa',
+          borderBottom: '1px solid #f0f0f0',
+          padding: '16px 24px',
+        }}
+      >
+        <AssignmentForm />
+      </Header>
+
+      <Content style={{ overflow: 'auto', padding: '16px' }}>
+        <ItemList<Assignment>
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          searchPlaceholder={t('assignments.searchPlaceholder')}
+          loadingText={t('common.loading')}
+          isLoading={assignmentsLoading}
+          items={assignments}
+          getStatusLabel={(status) => t(`assignments.status.${status.toLowerCase()}`)}
+          renderItemContent={(assignment) => (
+            <>
+              <div style={{ marginBottom: '8px' }}>
+                <Text strong>{assignment.label}</Text>
+              </div>
+              <div style={{ marginTop: '4px' }}>
+                <Text type="secondary" style={{ fontSize: '0.85rem' }}>
+                  {assignment.clients?.length
+                    ? assignment.clients.join(', ')
+                    : t('common.none')}
+                </Text>
+              </div>
+            </>
+          )}
+          selectedId={selectedId}
+          onSelect={onSelect}
+          pagination={pagination}
+          showPaginationWhenTotalOver={ASSIGNMENTS_PER_PAGE}
+        />
+      </Content>
+    </Layout>)
 }
 
 export default AssignmentList

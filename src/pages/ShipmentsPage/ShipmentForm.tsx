@@ -1,18 +1,20 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Form, Input, Select, Button, Space } from 'antd'
+import { Modal, Form, Input, Select, Button, Space, Typography } from 'antd'
 import type { CreateShipmentData } from '../../types'
 import AssignmentsSelect from '../../components/shared/AssignmentsSelect'
+import { useCreateShipment } from '../../hooks'
 
 const { Option } = Select
+const { Title } = Typography
 
 interface ShipmentFormProps {
-  onSave: (data: CreateShipmentData) => void
-  onCancel: () => void
+  // onCreate: ShipmentListProps
 }
 
-const ShipmentForm: React.FC<ShipmentFormProps> = ({ onSave, onCancel }) => {
+const ShipmentForm: React.FC<ShipmentFormProps> = () => {
   const { t } = useTranslation()
+  const [showForm, setShowForm] = useState(false)
   const [form] = Form.useForm()
   const [formData, setFormData] = useState({
     client_name: '',
@@ -25,6 +27,19 @@ const ShipmentForm: React.FC<ShipmentFormProps> = ({ onSave, onCancel }) => {
     lat: '',
     lng: '',
   })
+  const createShipmentMutation = useCreateShipment()
+
+
+  const handleCreate = async (data: CreateShipmentData) => {
+    try {
+      await createShipmentMutation.mutateAsync(data)
+      setShowForm(false)
+      // onCreate()
+    } catch (error) {
+      console.error('Error creating shipment:', error)
+      alert('Failed to create shipment')
+    }
+  }
 
   const handleStatusChange = (value: string) => {
     setFormData((prev) => ({
@@ -56,125 +71,139 @@ const ShipmentForm: React.FC<ShipmentFormProps> = ({ onSave, onCancel }) => {
       lat: values.lat ? parseFloat(values.lat) : 37.50625872839932,
       lng: values.lng ? parseFloat(values.lng) : -122.27532417589653,
     }
-    onSave(newShipment)
+    handleCreate(newShipment)
     form.resetFields()
   }
 
   return (
-    <Modal
-      title={t('shipments.form.title')}
-      open={true}
-      onCancel={onCancel}
-      footer={null}
-      width={500}
-    >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={formData}
-        onFinish={handleFinish}
-      >
-        <Form.Item
-          name="client_name"
-          label={t('shipments.form.clientName')}
-          rules={[{ required: true, message: t('shipments.form.clientName') + ' is required' }]}
+    <>
+      <Space direction="vertical" size="small" style={{ width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Title level={4} style={{ margin: 0 }}>
+            {t('shipments.list.title')}
+          </Title>
+          <Button type="primary" onClick={() => setShowForm(true)}>
+            {t('shipments.list.addButton')}
+          </Button>
+        </div>
+      </Space>
+      {showForm && (
+        <Modal
+          title={t('shipments.form.title')}
+          open={true}
+          onCancel={() => setShowForm(false)}
+          footer={null}
+          width={500}
         >
-          <Input />
-        </Form.Item>
+          <Form
+            form={form}
+            layout="vertical"
+            initialValues={formData}
+            onFinish={handleFinish}
+          >
+            <Form.Item
+              name="client_name"
+              label={t('shipments.form.clientName')}
+              rules={[{ required: true, message: t('shipments.form.clientName') + ' is required' }]}
+            >
+              <Input />
+            </Form.Item>
 
-        <Form.Item
-          name="label"
-          label={t('shipments.form.label')}
-          rules={[{ required: true, message: t('shipments.form.label') + ' is required' }]}
-        >
-          <Input />
-        </Form.Item>
+            <Form.Item
+              name="label"
+              label={t('shipments.form.label')}
+              rules={[{ required: true, message: t('shipments.form.label') + ' is required' }]}
+            >
+              <Input />
+            </Form.Item>
 
-        <Form.Item
-          name="status"
-          label={t('shipments.form.status')}
-          rules={[{ required: true }]}
-        >
-          <Select onChange={handleStatusChange}>
-            <Option value="OPEN">{t('shipments.status.open')}</Option>
-            <Option value="IN_TRANSIT">{t('shipments.status.in_transit')}</Option>
-            <Option value="DELIVERED">{t('shipments.status.delivered')}</Option>
-          </Select>
-        </Form.Item>
+            <Form.Item
+              name="status"
+              label={t('shipments.form.status')}
+              rules={[{ required: true }]}
+            >
+              <Select onChange={handleStatusChange}>
+                <Option value="OPEN">{t('shipments.status.open')}</Option>
+                <Option value="IN_TRANSIT">{t('shipments.status.in_transit')}</Option>
+                <Option value="DELIVERED">{t('shipments.status.delivered')}</Option>
+              </Select>
+            </Form.Item>
 
-        <Form.Item
-          name="arrival_date"
-          label={t('shipments.form.arrivalDate')}
-          rules={[{ required: true }]}
-        >
-          <Input type="date" />
-        </Form.Item>
+            <Form.Item
+              name="arrival_date"
+              label={t('shipments.form.arrivalDate')}
+              rules={[{ required: true }]}
+            >
+              <Input type="date" />
+            </Form.Item>
 
-        <Form.Item
-          name="delivery_by_date"
-          label={t('shipments.form.deliveryByDate')}
-          rules={[{ required: true }]}
-        >
-          <Input type="date" />
-        </Form.Item>
+            <Form.Item
+              name="delivery_by_date"
+              label={t('shipments.form.deliveryByDate')}
+              rules={[{ required: true }]}
+            >
+              <Input type="date" />
+            </Form.Item>
 
-        <Form.Item
-          name="warehouse_id"
-          label={t('shipments.form.warehouseId')}
-          rules={[{ required: true }]}
-        >
-          <Input />
-        </Form.Item>
+            <Form.Item
+              name="warehouse_id"
+              label={t('shipments.form.warehouseId')}
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
 
-        <Form.Item
-          name="assignment_id"
-          label={
-            <>
-              {t('shipments.details.assignmentId')}
-              {form.getFieldValue('status') !== 'OPEN' && ' *'}
-            </>
-          }
-          rules={[
-            {
-              required: form.getFieldValue('status') !== 'OPEN',
-              message: t('shipments.details.assignmentRequired'),
-            },
-          ]}
-        >
-          <AssignmentsSelect
-            currentValue={''}
-            onChange={(value: string) => {
-              setFormData((prev) => {
-                const newData = { ...prev, assignment_id: value }
-                form.setFieldsValue({ assignment_id: newData.assignment_id })
-                return newData
-              })
-            }}
-            disabled={formData.status === 'OPEN'}
-            placeholder={t('common.none')}
-            noneOptionLabel={t('common.none')}
-            allowClear
-          />
-        </Form.Item>
+            <Form.Item
+              name="assignment_id"
+              label={
+                <>
+                  {t('shipments.details.assignmentId')}
+                  {form.getFieldValue('status') !== 'OPEN' && ' *'}
+                </>
+              }
+              rules={[
+                {
+                  required: form.getFieldValue('status') !== 'OPEN',
+                  message: t('shipments.details.assignmentRequired'),
+                },
+              ]}
+            >
+              <AssignmentsSelect
+                currentValue={''}
+                onChange={(value: string) => {
+                  setFormData((prev) => {
+                    const newData = { ...prev, assignment_id: value }
+                    form.setFieldsValue({ assignment_id: newData.assignment_id })
+                    return newData
+                  })
+                }}
+                disabled={formData.status === 'OPEN'}
+                placeholder={t('common.none')}
+                noneOptionLabel={t('common.none')}
+                allowClear
+              />
+            </Form.Item>
 
-        <Form.Item name="lat" label={t('shipments.form.latitude')}>
-          <Input type="number" step="any" placeholder="37.50625872839932" />
-        </Form.Item>
+            <Form.Item name="lat" label={t('shipments.form.latitude')}>
+              <Input type="number" step="any" placeholder="37.50625872839932" />
+            </Form.Item>
 
-        <Form.Item name="lng" label={t('shipments.form.longitude')}>
-          <Input type="number" step="any" placeholder="-122.27532417589653" />
-        </Form.Item>
+            <Form.Item name="lng" label={t('shipments.form.longitude')}>
+              <Input type="number" step="any" placeholder="-122.27532417589653" />
+            </Form.Item>
 
-        <Form.Item>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button onClick={onCancel}>{t('common.cancel')}</Button>
-            <Button type="primary" htmlType="submit">
-              {t('common.create')}
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    </Modal>
+            <Form.Item>
+              <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+                <Button onClick={() => setShowForm(false)}>{t('common.cancel')}</Button>
+                <Button type="primary" htmlType="submit">
+                  {t('common.create')}
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        </Modal>
+      )}
+    </>
   )
 }
 
